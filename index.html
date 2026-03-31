@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Калькулятор переплавки серебра</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 bg-gray-100 flex items-center justify-center">
+    <div class="max-w-6xl w-full mx-auto bg-white rounded-xl shadow-lg p-4 md:p-8">
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-5 md:mb-6 border-b pb-3 uppercase text-center md:text-left">КАЛЬКУЛЯТОР ЦЕЛЕСООБРАЗНОСТИ ПЕРЕПЛАВКИ</h1>
+        
+        <div class="space-y-4 md:space-y-6">
+            <!-- верхняя часть: ввод данных -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                
+                <!-- левая колонка: исторические данные -->
+                <div class="bg-blue-50 p-4 md:p-5 rounded-xl border border-blue-100 h-full">
+                    <h2 class="text-base md:text-lg font-semibold text-blue-800 mb-3 md:mb-4">исторические данные (старое)</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">закупка серебра (руб/гр)</label>
+                            <input type="number" id="oldSilverPrice" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="97">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">старая работа (руб)</label>
+                            <input type="number" id="oldWorkCost" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="300">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">вес изделия 925 пробы (грамм)</label>
+                            <input type="number" id="oldWeight" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="5">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- правая колонка: текущие данные и новые -->
+                <div class="space-y-4 md:space-y-6">
+                    <!-- блок текущих данных -->
+                    <div class="bg-gray-50 p-4 md:p-5 rounded-xl border border-gray-200">
+                        <h2 class="text-base md:text-lg font-semibold text-gray-700 mb-3 md:mb-4">текущие рыночные данные</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">цена 999 (руб/гр)</label>
+                                <input type="number" id="price999" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="210">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">угар (%)</label>
+                                <input type="number" id="loss" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- блок нового изделия -->
+                    <div class="bg-gray-50 p-4 md:p-5 rounded-xl border border-gray-200">
+                        <h2 class="text-base md:text-lg font-semibold text-gray-700 mb-3 md:mb-4">экономика нового изделия</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">работа (руб)</label>
+                                <input type="number" id="newWorkCost" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="1500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">доля 999 (%)</label>
+                                <input type="number" id="newSilverPercent" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">маржа (%)</label>
+                                <input type="number" id="margin" class="w-full px-3 py-2 text-base md:text-sm border border-gray-300 rounded-lg outline-none transition-all bg-white" value="80">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- нижняя часть: блок результатов -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col w-full">
+                <div class="p-4 md:p-6 lg:p-8">
+                    <h2 class="text-lg md:text-2xl font-black text-blue-700 mb-4 md:mb-6 border-b-2 border-blue-200 pb-2 uppercase tracking-wide">финансовый анализ</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-4 md:mb-6">
+                        <!-- колонка 1 -->
+                        <div class="bg-gray-50 rounded-lg p-4 md:p-5 border border-gray-200 flex flex-col justify-between">
+                            <div class="space-y-3 md:space-y-4 mb-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs md:text-sm text-gray-500 uppercase">исторические затраты:</span>
+                                    <span id="resOldCost" class="font-bold text-gray-900 text-sm md:text-xl">0.00 руб</span>
+                                </div>
+                                <div class="flex justify-between items-center border-t border-gray-200 pt-3 md:pt-4">
+                                    <span class="text-xs md:text-sm text-gray-500 uppercase">текущая ценность:</span>
+                                    <span id="resNetValue" class="font-bold text-gray-900 text-sm md:text-xl">0.00 руб</span>
+                                </div>
+                            </div>
+                            <div class="border-t border-gray-300 pt-3 md:pt-4 mt-auto flex justify-between items-center">
+                                <span class="text-sm md:text-base font-semibold text-gray-700">ист. фин. результат:</span>
+                                <span id="resProfit" class="font-black text-gray-900 text-lg md:text-2xl">0.00 руб</span>
+                            </div>
+                        </div>
+
+                        <!-- колонка 2 -->
+                        <div class="flex flex-col justify-center space-y-3 md:space-y-5 px-2 md:px-4">
+                            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <span class="text-xs md:text-sm font-medium text-gray-600">с/с нового изделия:</span>
+                                <span id="resNewCost" class="font-bold text-gray-900 text-base md:text-xl">0.00 руб</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <span class="text-xs md:text-sm font-medium text-gray-600">целевая цена (<span id="marginLabel">80</span>%):</span>
+                                <span id="resNewPrice" class="font-black text-blue-600 text-xl md:text-3xl">0.00 руб</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2">
+                                <span class="text-xs md:text-sm text-gray-500 uppercase">окупаемость (выгодно при):</span>
+                                <span id="resBreakEven" class="font-bold text-blue-600 text-sm md:text-lg">от 0.00 руб/гр</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- справочный блок -->
+                    <div class="bg-gray-50/50 rounded-lg p-3 md:p-4 border border-gray-100 flex flex-col sm:flex-row justify-around text-center gap-2 sm:gap-0">
+                        <div>
+                            <div class="text-xs text-gray-400 mb-1">спасенное серебро:</div>
+                            <div id="resPureMass" class="font-medium text-gray-500 text-sm md:text-base">0.00 гр</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-400 mb-1">новое серебро 999:</div>
+                            <div id="resAddedMass" class="font-medium text-gray-500 text-sm md:text-base">0.00 гр</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 md:p-6 lg:p-8 bg-gray-50 border-t border-gray-200 rounded-b-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div id="verdictBox" class="w-full md:w-2/5 px-4 py-3 md:py-4 rounded-lg font-bold text-lg md:text-2xl transition-colors duration-300 shadow-sm text-center flex items-center justify-center min-h-[60px]">
+                        ожидание...
+                    </div>
+                    <p id="verdictSubtext" class="w-full md:w-3/5 text-sm md:text-base text-gray-600 leading-snug text-center md:text-left">
+                        <!-- подсказка -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // функция для форматирования чисел с пробелами
+        function formatNumber(num) {
+            let parts = num.toFixed(2).split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            return parts.join('.');
+        }
+
+        function calculate() {
+            // получаем старые данные
+            const oldSilverPrice = parseFloat(document.getElementById('oldSilverPrice').value) || 0;
+            const oldWorkCost = parseFloat(document.getElementById('oldWorkCost').value) || 0;
+            const oldWeight = parseFloat(document.getElementById('oldWeight').value) || 0;
+
+            // получаем текущие данные
+            const price999 = parseFloat(document.getElementById('price999').value) || 0;
+            const loss = parseFloat(document.getElementById('loss').value) || 0;
+
+            // получаем новые данные
+            const newWorkCost = parseFloat(document.getElementById('newWorkCost').value) || 0;
+            let newSilverPercent = parseFloat(document.getElementById('newSilverPercent').value) || 0;
+            let margin = parseFloat(document.getElementById('margin').value) || 0;
+
+            if (margin >= 100) margin = 99.99;
+            if (newSilverPercent >= 100) newSilverPercent = 99.99;
+
+            // 1. считаем исторические затраты на старое изделие
+            const oldBookValue = (oldWeight * oldSilverPrice) + oldWorkCost;
+            
+            // 2. считаем массу добытого чистого серебра
+            const pureMass = oldWeight * 0.925 * (1 - (loss / 100));
+            
+            // 3. считаем текущую чистую ценность (рыночная стоимость)
+            const recoveredValue = pureMass * price999;
+            const netRecoveredValue = recoveredValue;
+            
+            // 4. финансовый результат (покрывает ли текущая ценность старые затраты)
+            const profitVsHistory = netRecoveredValue - oldBookValue;
+
+            // расчет точки безубыточности: при какой цене 999 выходим в ноль
+            const breakEvenPrice = pureMass > 0 ? oldBookValue / pureMass : 0;
+
+            // 5. экономика нового изделия
+            const addedPureMass = pureMass * (newSilverPercent / (100 - newSilverPercent));
+            const newSilverCost = addedPureMass * price999; 
+            const totalNewCost = newSilverCost + newWorkCost; 
+            const targetPrice = totalNewCost / (1 - (margin / 100)); 
+
+            // обновление интерфейса
+            document.getElementById('resOldCost').innerText = formatNumber(oldBookValue) + ' руб';
+            document.getElementById('resNetValue').innerText = formatNumber(netRecoveredValue) + ' руб';
+            
+            document.getElementById('resBreakEven').innerText = 'от ' + formatNumber(breakEvenPrice) + ' руб/гр';
+            
+            const resProfitEl = document.getElementById('resProfit');
+            resProfitEl.innerText = formatNumber(profitVsHistory) + ' руб';
+            
+            document.getElementById('resPureMass').innerText = formatNumber(pureMass) + ' гр';
+            document.getElementById('resAddedMass').innerText = formatNumber(addedPureMass) + ' гр';
+            
+            document.getElementById('resNewCost').innerText = formatNumber(totalNewCost) + ' руб';
+            document.getElementById('marginLabel').innerText = margin;
+            document.getElementById('resNewPrice').innerText = formatNumber(targetPrice) + ' руб';
+
+            const verdictBox = document.getElementById('verdictBox');
+            const verdictSubtext = document.getElementById('verdictSubtext');
+
+            if (oldWeight === 0 || price999 === 0) {
+                verdictBox.className = 'w-full md:w-2/5 px-4 py-3 md:py-4 rounded-lg font-bold text-lg md:text-2xl bg-gray-200 text-gray-600 shadow-sm text-center flex items-center justify-center min-h-[60px]';
+                verdictBox.innerText = 'ДАННЫЕ...';
+                verdictSubtext.innerText = '';
+                resProfitEl.className = 'font-black text-gray-800 text-lg md:text-2xl';
+            } else if (profitVsHistory >= 0) {
+                verdictBox.className = 'w-full md:w-2/5 px-4 py-3 md:py-4 rounded-lg font-bold text-lg md:text-2xl bg-green-100 text-green-800 border border-green-300 shadow-sm text-center flex items-center justify-center min-h-[60px]';
+                verdictBox.innerText = 'ПЛАВИТЬ';
+                verdictSubtext.innerHTML = 'рост цен на серебро <strong>полностью окупил</strong> старые затраты. вы фиксируете прибыль.';
+                resProfitEl.className = 'font-black text-green-600 text-lg md:text-2xl';
+                resProfitEl.innerText = '+' + formatNumber(profitVsHistory) + ' руб';
+            } else {
+                verdictBox.className = 'w-full md:w-2/5 px-4 py-3 md:py-4 rounded-lg font-bold text-lg md:text-2xl bg-red-100 text-red-800 border border-red-300 shadow-sm text-center flex items-center justify-center min-h-[60px]';
+                verdictBox.innerText = 'НЕ ПЛАВИТЬ';
+                verdictSubtext.innerHTML = 'текущая стоимость серебра <strong>не покрывает</strong> ваши прошлые затраты. переплавка - убыток.';
+                resProfitEl.className = 'font-black text-red-600 text-lg md:text-2xl';
+            }
+        }
+
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        calculate();
+    </script>
+</body>
+</html>
